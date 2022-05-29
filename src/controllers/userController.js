@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "Please enter your details to Register" })   //validating the parameters of body
         }
 
-        const { fname, lname, email, phone, password } = data
+        const { fname, lname, email, phone, password,pincode } = data
 
         if (!validator.isValidValue(fname)) {
             return res.status(400).send({ status: false, message: "Please provide the First name" })   //fname is mandory 
@@ -59,15 +59,21 @@ const createUser = async (req, res) => {
         const address = JSON.parse(data.address)  //converting the address into JSON form
 
 
-        if (!address.shipping || (address.shipping && (!address.shipping.street || !address.shipping.city || !address.shipping.pincode))) {
+        if (!address.shipping || (address.shipping && (!address.shipping.street.trim() || !address.shipping.city.trim() || !address.shipping.pincode))) {
             return res.status(400).send({ status: false, message: "Please provide the Shipping address" })
         }
 
 
-        if (!address.billing || (address.billing && (!address.billing.street || !address.billing.city || !address.billing.pincode))) {
+        if (!address.billing || (address.billing && (!address.billing.street.trim() || !address.billing.city.trim() || !address.billing.pincode))) {
             return res.status(400).send({ status: false, message: "Please provid the Billing address" })
         }
-
+        if (!validator.isValidPincode(address.billing.pincode)) {
+            return res.status(400).send({ status: false, message: "Please provide the valid Pincode" })    //Regex for checking the valid password format 
+        }
+        
+        if (!validator.isValidPincode(address.shipping.pincode)) {
+            return res.status(400).send({ status: false, message: "Please provide the valid Pincode" })    //Regex for checking the valid password format 
+        }
 
 
         let files = req.files
@@ -161,6 +167,7 @@ const getUserProfile = async function (req, res) {
         if (!(validator.isValidObjectId(userId))) return res.status(400).send({ status: false, message: "Please Provide valid userId" })
 
         const userDetails = await userModel.findById({ _id: userId })
+        
 
         if (!userDetails) return res.status(404).send({ status: false, message: "No such User Exists" })
 
@@ -176,15 +183,12 @@ module.exports.getUserProfile = getUserProfile
 const updateUser = async function (req, res) {
     let data = req.body
     let userId = req.params.userId
+
+
     let { fname, lname, email, phone, password, profileImage, address } = data
 
-    if (!validator.isValidObjectId(userId)) {
-        return res.status(400).send({ status: false, message: "Please provide valid objectID" })
-    }
-
-    let UserId = await userModel.findById(userId)
-    if (!UserId) {
-        return res.status(400).send({ status: false, message: "No user found" })
+    if (!validator.isValidDetails(data)) {
+        return res.status(400).send({ status: false, msg: "Please enter data to update" });
     }
 
     if (fname == "") {

@@ -14,9 +14,9 @@ const isValidDetails = function(requestBody) {
     return Object.keys(requestBody).length > 0;       // it checks, is there any key is available or not in request body
 };
 
-const isValidObjectId = function (objectId){    
-    return mongoose.Types.ObjectId.isValid(objectId)    //Creating a validation function for Object Id
-};
+const isValidObjectId = function (ObjectId) {
+    return mongoose.Types.ObjectId.isValid(ObjectId)
+}
 
 let validateEmail = function (email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);    //Checking if user entered a valid email or not
@@ -47,7 +47,7 @@ let isValidPincode = function (value) {
 // };
 
 const isValidSize = function (input) {
-    return ["S", "XS","M","X", "L","XXL", "XL"].indexOf(input) !== -1;  //enum validation
+    return !(["S", "XS","M","X", "L","XXL", "XL"].includes(input));  //enum validation
 };
 
 const Shipping = function (input) {

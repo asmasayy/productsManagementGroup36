@@ -58,20 +58,6 @@ const createProduct = async function (req, res) {
         }
         currencyFormat = currencySymbol('INR') // need currency symbolmap package here
 
-
-        //const availableSizes = JSON.parse(data.availableSizes ) 
-
-        // let sizeEnum = availableSizes.split(",").map(x => x.trim())  //trim remove space like  "  a  "
-
-        // for (let i = 0; i < sizeEnum.length; i++) {
-        //  if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(sizeEnum[i]))) {
-        //      return res.status(400).send({status: false, message: `Available Sizes must be ${["S", "XS", "M", "X", "L", "XXL", "XL"]}` })
-        //  }
-        // }
-
-        //    const availableSize = JSON.parse(availableSizes )
-        console.log(typeof (availableSizes)) //  need to add mutiple size validation
-
         if (!validator.isValidSize(availableSizes)) {
             return res.status(400).send({ status: false, message: "Please provide the size in s,xs,m,x,l,xl,xxl" })   //availableSizes is mandory
         }
@@ -122,12 +108,16 @@ const updateproduct = async function (req, res) {
     let data = req.body
     let productId = req.params.productId
     let { title, description, availableSizes, isFreeShipping, price, productImage, style, installments } = data
-    if (!validator.isValidObjectId(productId)) {
+   
+   if (!validator.isValidObjectId(productId)) {
         return res.status(400).send({ status: false, message: "Please provide valid productID" })
     }
     let ProductId = await productModel.findById(productId)
     if (!ProductId) {
         return res.status(400).send({ status: false, message: "No product found" })
+    }
+    if (!validator.isValidDetails(data)) {
+        return res.status(400).send({ status: false, msg: "Please enter data to update" });
     }
 
     if (title == "") {
@@ -193,17 +183,15 @@ const updateproduct = async function (req, res) {
         if (!validator.isValidValue(installments)) return res.status(400).send({ status: false, message: "Please provide installment to update" })
 
     }
-    if (productImage) {
-        let files = req.files
 
-        if (files && files.length > 0) {
-            var updateImage = await awsConfig.uploadFile(files[0])
+    let files = req.files
 
-        }
-        else {
-            return res.status(400).send({ status: false, message: "Please upload your Profile Image" })   //profileImage is mandory
-        }
+    if (files && files.length > 0) {
+        var updateImage = await awsConfig.uploadFile(files[0])
+
     }
+
+
 
 
 
@@ -283,20 +271,20 @@ const getproducts = async function (req, res) {
 
 module.exports.getproducts = getproducts
 
-const getProductById = async function(req, res){
-    try{
-    
+const getProductById = async function (req, res) {
+    try {
+
         const productId = req.params.productId;
-        if(!(validator.isValidObjectId(productId))) return res.status(400).send({status: false, message: "Please provide valid productId"})
-    
-        const productDetails = await productModel.findOne({_id:productId, isDeleted:false})
-    
-        if(!productDetails) return res.status(404).send({status:false, message:"No such product exists"})
-    
-        return res.status(200).send({status: true, message: 'Success', data:productDetails})
-    
-    }catch(error){
-        return res.status(500).send({status:false, Error:error.message})
+        if (!(validator.isValidObjectId(productId))) return res.status(400).send({ status: false, message: "Please provide valid productId" })
+
+        const productDetails = await productModel.findOne({ _id: productId, isDeleted: false })
+
+        if (!productDetails) return res.status(404).send({ status: false, message: "No such product exists" })
+
+        return res.status(200).send({ status: true, message: 'Success', data: productDetails })
+
+    } catch (error) {
+        return res.status(500).send({ status: false, Error: error.message })
     }
 }
 
