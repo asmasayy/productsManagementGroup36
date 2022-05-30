@@ -65,4 +65,4 @@ const isValidStatus = function(status) {
 
 
 module.exports = { isValidValue, isValidDetails, isValidNumber, isValidObjectId, validateEmail, validatephone,Shipping, validatePassword, 
-        validateChar, /*validateStringNoSpace,*/ isValidPincode, /*validatePrice,*/ isValidSize, validInstallment,  isValidStatus};
+        validateChar,/*validateStringNoSpace,*/ isValidPincode, /*validatePrice,*/ isValidSize, validInstallment,  isValidStatus};

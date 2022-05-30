@@ -4,6 +4,8 @@ const aws= require("aws-sdk")
 const userController=require("../controllers/userController")
 const middleware=require('../utils/auth')
 const productController=require("../controllers/productController")
+const cartController=require("../controllers/cartController")
+
 
 router.post('/register', userController.createUser );  //CreateUser
 
@@ -27,5 +29,17 @@ router.delete('/products/:productId',productController.deleteProductById)
 
 // ----------------------------Cart Routes---------------------------------------------//
 
+router.post('/users/:userId/cart', cartController.createCart );
+
+router.put('/users/:userId/cart', cartController.updateCart);
+
+router.get('/users/:userId/cart',middleware.userAuth, middleware.Authorisation,cartController.getCartDetails)
+
+// if api is invalid OR wrong URL
+router.all("/*", function (req, res) {
+    res
+      .status(404)
+      .send({ status: false, msg: "The api you requested is not available" });
+  });
 
 module.exports = router;

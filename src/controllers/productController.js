@@ -191,10 +191,6 @@ const updateproduct = async function (req, res) {
 
     }
 
-
-
-
-
     const updatedData = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false },
         { title: title, description: description, availableSizes: availableSizes, isFreeShipping: isFreeShipping, price: price, style: style, productImage: updateImage, installments: installments }, { new: true })
     res.send({ Data: updatedData })
