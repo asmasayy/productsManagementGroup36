@@ -35,6 +35,8 @@ router.put('/users/:userId/cart', cartController.updateCart);
 
 router.get('/users/:userId/cart',middleware.userAuth, middleware.Authorisation,cartController.getCartDetails)
 
+router.delete('/users/:userId/cart',cartController.deleteCart)
+
 // if api is invalid OR wrong URL
 router.all("/*", function (req, res) {
     res
