@@ -42,7 +42,7 @@ router.delete('/users/:userId/cart', userAuth, Authorisation, cartController.del
 
 router.post('/users/:userId/orders', userAuth, Authorisation, orderController.createOrder);
 
-// router.put('/users/:userId/orders', orderController.updateOrder);
+router.put('/users/:userId/orders',userAuth, Authorisation, orderController.updateOrder);
 
 // if api is invalid OR wrong URL
 router.all("/*", function (req, res) {
