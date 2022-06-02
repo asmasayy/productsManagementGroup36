@@ -1,15 +1,7 @@
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel")
-const validator=require("../utils/validator")
+const validator = require("../utils/validator")
 
-// const token = req.header('Authorization','Bearer Token') // read token from headers
-
-// jwt.verify(token.split(" ")[1]) // 
-// token => "Beareer <token>"
-
-//=> [Bearer, <token>]
-
-// //Creating Authorization feature 
 const userAuth = async (req, res, next) => {
     try {
         const token = req.header('Authorization', 'Bearer Token')
@@ -81,7 +73,7 @@ const Authorisation = async function (req, res, next) {
         if (!User) {
             return res.status(404).send({ status: false, message: "User does not exist" })
         }
-        
+
 
         // checking if the userId in token is the same as id provided in params 
         let user = User._id.toString()
