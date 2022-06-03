@@ -42,6 +42,12 @@ const isValidSize = function (input) {
     return !(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(input));  //enum validation
 };
 
+let isValidEnum = (enm) =>{
+    var uniqueEnums = [...new Set(enm)];
+    const enumList = ["S", "XS", "M", "X", "L", "XXL", "XL"];
+    return enm.length === uniqueEnums.length && enm.every(e => enumList.includes(e));
+}
+
 const Shipping = function (input) {
     return ["true", "false"].indexOf(input) !== -1;
 };
@@ -58,5 +64,5 @@ const isValidStatus = function (status) {
 
 module.exports = {
     isValidValue, isValidDetails, isValidNumber, isValidObjectId, validateEmail, validatephone, Shipping, validatePassword,
-    isValidPincode, isValidSize, validInstallment, isValidStatus
+    isValidPincode, isValidSize, validInstallment, isValidStatus,isValidEnum
 };

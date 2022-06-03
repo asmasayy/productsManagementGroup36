@@ -55,16 +55,20 @@ const createProduct = async function (req, res) {
         }
 
         if (availableSizes) {
-            var arr1 = ["S", "XS", "M", "X", "L", "XXL", "XL"]
-            var arr2 = availableSizes.toUpperCase().split(",").map((s) => s.trim())
+        //     var arr1 = ["S", "XS", "M", "X", "L", "XXL", "XL"]
+        //     var arr2 = availableSizes.toUpperCase().split(",").map((s) => s.trim())
 
-            for (let i = 0; i < arr2.length; i++) {
-                if (!(arr1.includes(arr2[i]))) {
-                    return res.status(400).send({ status: false, message: "availableSizes must be [S, XS, M, X, L, XXL, XL]" });
-                }
-            }
+        //     for (let i = 0; i < arr2.length; i++) {
+        //         if (!(arr1.includes(arr2[i]))) {
+        //             return res.status(400).send({ status: false, message: "availableSizes must be [S, XS, M, X, L, XXL, XL]" });
+        //         }
+        //     }
+        
+        let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
+        
+        if (!validator.isValidEnum(availSizes))
+            return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
         }
-
         if (installments) {
             if (!validator.validInstallment(installments)) {
                 return res.status(400).send({ status: false, msg: "instalment can not be a decimal number" })
@@ -144,8 +148,10 @@ const updateproduct = async function (req, res) {
 
         }
         else if (availableSizes) {
-            if (!validator.isValidValue(availableSizes)) return res.status(400).send({ status: false, message: "Please provide size to update" })
-
+        let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
+        
+        if (!validator.isValidEnum(availSizes))
+            return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
         }
 
         if (isFreeShipping == "") {

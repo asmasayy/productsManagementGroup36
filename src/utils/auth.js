@@ -69,7 +69,7 @@ const Authorisation = async function (req, res, next) {
         let decoded = decodeToken.userId
 
         let User = await userModel.findById(userId)
-        console.log(User)
+        // console.log(User)
         if (!User) {
             return res.status(404).send({ status: false, message: "User does not exist" })
         }
