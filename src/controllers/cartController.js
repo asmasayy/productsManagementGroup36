@@ -25,10 +25,6 @@ const createCart = async function (req, res) {
         if (!validator.isValidObjectId(productId)) {
             return res.status(400).send({ status: false, message: "Please provide valid ProductId" })
         }
-        // if (!validator.isValidNumber(quantity)) {
-        //     return res.status(400).send({ status: false, message: "Please provide valid Quantity and it must be greater than Zero!" })
-        // }
-        //Validation ends
 
         const findUser = await userModel.findById({ _id: userId })
         if (!findUser) return res.status(404).send({ status: false, message: `User doesn't exist by this Id` })
@@ -111,11 +107,7 @@ const updateCart = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Please enter valid productId " })
 
         }
-        //    if(validator.isValidValue(removeProduct)){
-        //        return res.status(400).send({status:false,msg:"Please provide product quantity to remove"})
-
-
-        //    }
+        
         const findCart = await cartModel.findOne({ _id: cartId, isDeleted: false })
         if (!findCart) {
             return res.status(400).send({ status: false, msg: "cart not found or is deleted" })
@@ -129,8 +121,6 @@ const updateCart = async function (req, res) {
             return res.status(404).send({ status: false, msg: "Product not found or is deleted" })
 
         }
-
-        //const removeProduct= await productModel.findOne({_id:productId,isDeleted:false})
         
         if ((isNaN(Number(removeProduct)))) {
             return res.status(400).send({ status: false, msg: "Provide quantity to remove" })
@@ -181,7 +171,7 @@ const updateCart = async function (req, res) {
                     let data = await cartModel.findOneAndUpdate({ _id: cartId }, { $set: { totalPrice: totalAmount, totalItems: quantity } }, { new: true })   //update the cart with total items and totalprice
                 }
             } else {
-                return res.status(400).send({ status: false, message: 'no such Quantity/Product present in this cart', data: findCart })
+                return res.status(400).send({ status: false, message: 'no such Quantity/Product present in this cart', data: data })
             }
 
         }

@@ -220,7 +220,7 @@ const getproducts = async function (req, res) {
         let priceGreaterThan = filter.priceGreaterThan
         let priceLessThan = filter.priceLessThan
 
-
+      
 
         if (Name) {
             if (!(validator.isValidValue(Name)))
