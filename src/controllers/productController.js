@@ -55,19 +55,19 @@ const createProduct = async function (req, res) {
         }
 
         if (availableSizes) {
-        //     var arr1 = ["S", "XS", "M", "X", "L", "XXL", "XL"]
-        //     var arr2 = availableSizes.toUpperCase().split(",").map((s) => s.trim())
+            //     var arr1 = ["S", "XS", "M", "X", "L", "XXL", "XL"]
+            //     var arr2 = availableSizes.toUpperCase().split(",").map((s) => s.trim())
 
-        //     for (let i = 0; i < arr2.length; i++) {
-        //         if (!(arr1.includes(arr2[i]))) {
-        //             return res.status(400).send({ status: false, message: "availableSizes must be [S, XS, M, X, L, XXL, XL]" });
-        //         }
-        //     }
-        
-        let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
-        
-        if (!validator.isValidEnum(availSizes))
-            return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
+            //     for (let i = 0; i < arr2.length; i++) {
+            //         if (!(arr1.includes(arr2[i]))) {
+            //             return res.status(400).send({ status: false, message: "availableSizes must be [S, XS, M, X, L, XXL, XL]" });
+            //         }
+            //     }
+
+            let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
+
+            if (!validator.isValidEnum(availSizes))
+                return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
         }
         if (installments) {
             if (!validator.validInstallment(installments)) {
@@ -148,10 +148,10 @@ const updateproduct = async function (req, res) {
 
         }
         else if (availableSizes) {
-        let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
-        
-        if (!validator.isValidEnum(availSizes))
-            return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
+            let availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
+
+            if (!validator.isValidEnum(availSizes))
+                return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL or remove duplicate sizes` })
         }
 
         if (isFreeShipping == "") {
@@ -219,8 +219,23 @@ const getproducts = async function (req, res) {
         let size = filter.size
         let priceGreaterThan = filter.priceGreaterThan
         let priceLessThan = filter.priceLessThan
+        let priceSort = filter.priceSort
 
-      
+        if (validator.isValidValue(priceSort)) {
+
+            if (!((priceSort == 1) || (priceSort == -1))) {
+                return res.status(400).send({ status: false, message: `priceSort should be 1 or -1 ` })
+            }
+
+            const products = await productModel.find({filter,isDeleted:false}).sort({ price: priceSort })
+
+            if (Array.isArray(products) && products.length === 0) {
+                return res.status(404).send({ statuproductss: false, message: 'No Product found' })
+            }
+
+            return res.status(200).send({ status: true, message: 'Product list', data: products })
+        }
+    
 
         if (Name) {
             if (!(validator.isValidValue(Name)))
